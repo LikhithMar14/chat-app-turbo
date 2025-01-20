@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: '../.env' });
+console.log(process.env.NODE_ENV)
 
 const prismaClientSingleton = () => {
   return new PrismaClient();
