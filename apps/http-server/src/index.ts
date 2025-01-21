@@ -167,8 +167,8 @@ app.post('/room',authMiddleware,async(req:Request,res:Response):Promise<void> =>
 
         return;
     }catch(err){
-        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
-            message:"Error in room creation",
+        res.status(STATUS_CODES.BAD_REQUEST).json({
+            message:"Room already exists with this name",
             success:false,
             data:err
         })
