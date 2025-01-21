@@ -9,10 +9,9 @@ import cookieParser from "cookie-parser"
 const app = express();
 
 app.use(express.json());
-console.log(COOKIE_SECRET)
 app.use(cookieParser(COOKIE_SECRET))
 
-app.listen(HTTP_SERVER_PORT,()=>console.log(`Server ⚙️  started at port ${HTTP_SERVER_PORT}`))
+app.listen(HTTP_SERVER_PORT,()=>console.log(`Server ⚙️ started at port ${HTTP_SERVER_PORT}`))
 
 interface ResponseType{
     sucess:boolean,
