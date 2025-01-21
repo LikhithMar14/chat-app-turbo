@@ -18,10 +18,11 @@ const users: Map<WebSocket, User> = new Map();
 const verifyUser = (token: string): string | null => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    if (typeof decoded !== "object" || !decoded.userId) {
+    console.log("Decoded: ", decoded);
+    if (typeof decoded !== "object" || !decoded.user) {
       return null;
     }
-    return decoded.userId as string;
+    return decoded.user as string;
   } catch (err) {
     console.log("Error in verifying token", err);
     return null;
@@ -31,13 +32,16 @@ wss.on("connection", (ws, request) => {
   const url = request.url;
   if (!url) {
     ws.close();
+    console.log("No url");
     return;
   }
   const queryParams = new URLSearchParams(url.split("?")[1]);
   const token = queryParams.get("token");
+  console.log(token);
   const userId = verifyUser(token as string);
 
   if (!userId) {
+    console.log("Invalid user");
     ws.close();
     return;
   }
@@ -70,13 +74,19 @@ wss.on("connection", (ws, request) => {
         break;
       }
       case "chat": {
+        console.log(roomId, chatMessage);
         if (roomId && chatMessage) {
           await db.chat.create({
             data: { roomId: Number(roomId), message: chatMessage, userId },
           });
 
           for (const [, connectedUser] of users) {
+            console.log("Connected User:", connectedUser);
+            console.log("Room ID:", roomId);
+            console.log("Rooms Set:", connectedUser.rooms);
+
             if (connectedUser.rooms.has(roomId)) {
+              console.log("I am here");
               connectedUser.ws.send(
                 JSON.stringify({
                   type: "chat",

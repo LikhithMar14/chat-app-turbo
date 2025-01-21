@@ -2,10 +2,11 @@
 import { HTTP_SERVER_PORT,JWT_SECRET,STATUS_CODES,cookieOptions,COOKIE_SECRET} from "@repo/backend-common/config";
 import express, { Request, Response } from "express"
 import db from "@repo/db/client"
-import { CreateUserSchema,SigninSchema} from "@repo/common/types"
+import { CreateRoomSchema, CreateUserSchema,SigninSchema} from "@repo/common/types"
 import  bcrypt  from "bcryptjs"
 import jwt from "jsonwebtoken"
 import cookieParser from "cookie-parser"
+import { authMiddleware } from "./middleware";
 const app = express();
 
 app.use(express.json());
@@ -131,5 +132,45 @@ app.post('/login',async(req:Request,res:Response):Promise<void> => {
         })
 
         return;
+    }
+})
+
+app.post('/room',authMiddleware,async(req:Request,res:Response):Promise<void> => {
+    const parsedData = CreateRoomSchema.safeParse(req.body);
+    if(!parsedData.success){
+        res.status(STATUS_CODES.BAD_REQUEST).json({
+            message:"Invalid room data",
+            success:false
+        })
+        return;
+    }
+    console.log("Hello")
+    console.log("USER ID: ",req.user)
+    console.log("I am in room creation")
+    console.log("JWT_SECRET in http route: ",JWT_SECRET)
+
+    const userId = req.user.id as string;
+    const slug = parsedData.data.name;
+
+    try{
+        const room = await db.room.create({
+            data:{
+                slug
+            }
+        })
+        
+        res.status(STATUS_CODES.CREATED).json({
+            message:"Room created successfully",
+            success:true,
+            data:room
+        })
+
+        return;
+    }catch(err){
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            message:"Error in room creation",
+            success:false,
+            data:err
+        })
     }
 })
