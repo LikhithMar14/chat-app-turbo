@@ -1,12 +1,15 @@
 {
   "extends": "@repo/typescript-config/react-library.json",
-  "compilerOptions":{
-    "paths": {
-     "@/*": ["./src/*"]
-    },
-    "outDir": "./dist",
-    "rootDir": "./src"
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "declaration": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules","tailwind.config.ts"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

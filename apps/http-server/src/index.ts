@@ -189,7 +189,7 @@ app.post(
   }
 );
 
-app.get("/room/:slug", async (req: Request, res: Response): Promise<void> => {
+app.get("/room/:slug",authMiddleware, async (req: Request, res: Response): Promise<void> => {
   const slug = req.params.slug;
   console.log("Recieved slug: ", slug);
 
@@ -218,15 +218,41 @@ app.get("/room/:slug", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-app.get("/chat/:roomId",async(req:Request,res:Response):Promise<void> => {
-    const roomId = req.params.roomId;
-    console.log(roomId);
+app.get("/chat/:roomSlug",authMiddleware,async(req:Request,res:Response):Promise<void> => {
+    let roomSlug = req.params.roomSlug;
+    console.log(roomSlug);
     
     try{
+       
+        if(typeof roomSlug !== "string"){
+          res.status(STATUS_CODES.BAD_REQUEST).json({
+            message:"Invalid room slug",
+            success:false,
+          })
+          return;
+        }
+        const roomId = await db.room.findFirst({
+          where:{
+            slug:roomSlug
+          },
+          select:{
+            id:true
+          }
+        });
+
+
+        if(!roomId){
+          res.status(STATUS_CODES.NOT_FOUND).json({
+            message:"Room not found",
+            success:false,
+          });
+          return;
+        }
+        console.log("Hello")
 
         const messages = await db.chat.findMany({
             where:{
-                roomId:Number(roomId)
+                roomId:roomId.id
             },
             orderBy:{
                 createdAt:"desc"

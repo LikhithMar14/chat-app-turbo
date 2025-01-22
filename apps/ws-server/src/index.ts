@@ -75,7 +75,8 @@ wss.on("connection", (ws, request) => {
       }
       case "chat": {
         console.log(roomId, chatMessage);
-        if (roomId && chatMessage) {
+        if (roomId && chatMessage && userId) {
+          
           await db.chat.create({
             data: { roomId: Number(roomId), message: chatMessage, userId },
           });

@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@repo/ui"
+import { Button, ThemeToggle } from "@repo/ui"
 import { Card } from "@repo/ui";
 import { MessageCircle, Users, Zap, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   const features = [
@@ -33,7 +34,7 @@ export default function Home() {
         staggerChildren: 0.1,
         delayChildren: 0.3,
       },
-    },
+    },  
   };
 
   const item = {
@@ -45,6 +46,7 @@ export default function Home() {
     <div className="min-h-screen gradient-bg overflow-hidden">
       <div className="container mx-auto px-4 py-8">
         <nav className="flex justify-between items-center mb-16 relative">
+
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -63,15 +65,18 @@ export default function Home() {
               </motion.div>
             </div>
             <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-              ChatApp
+              PingMe
             </span>
           </motion.div>
+          
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="space-x-4"
+            className="space-x-1 md:space-x-4 items-center flex"
           >
+            
+            <ThemeToggle />
             <Button variant="ghost" asChild className="hover:bg-primary/10">
               <Link href="/signin">Sign In</Link>
             </Button>
@@ -100,7 +105,7 @@ export default function Home() {
               whileTap={{ scale: 0.95 }}
             >
               <Button size="lg" className="space-x-2 bg-primary hover:bg-primary/90 shadow-xl">
-                <span>Get Started</span>
+                <Link href={"/signin"}>Get Started</Link>
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </motion.div>
@@ -113,12 +118,8 @@ export default function Home() {
             className="relative"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl blur-3xl" />
-            <img
-              src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
-              alt="Chat Interface"
-              className="rounded-2xl shadow-2xl relative z-10 border border-primary/10"
-            />
-          </motion.div>
+            <Image src="/landingPagePic.svg" alt="image" width={800} height={800} />
+            </motion.div>
         </div>
 
         <motion.div
