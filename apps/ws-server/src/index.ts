@@ -48,7 +48,7 @@ wss.on("connection", (ws, request) => {
   const user: User = { ws, rooms: new Set(), userId };
   users.set(ws, user);
 
-  ws.on("message", async (message) => {
+    ws.on("message", async (message) => {
     let parsedData;
     try {
       parsedData = JSON.parse(message.toString());
